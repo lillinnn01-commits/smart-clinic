@@ -1,0 +1,2 @@
+package com.smartclinic.repository; import com.smartclinic.model.Appointment; import org.springframework.data.jpa.repository.JpaRepository; import java.time.*; import java.util.*;
+public interface AppointmentRepository extends JpaRepository<Appointment,Long>{ List<Appointment> findByDoctorIdAndAppointmentTimeBetween(Long id,LocalDateTime from,LocalDateTime to); List<Appointment> findByPatientId(Long id); }
