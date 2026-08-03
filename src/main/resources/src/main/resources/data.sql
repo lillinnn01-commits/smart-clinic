@@ -1,0 +1,3 @@
+INSERT IGNORE INTO doctors(id,name,specialty,email,password) VALUES (1,'Анна Иванова','Терапевт','doctor@clinic.local','doctor123'),(2,'Илья Петров','Кардиолог','cardio@clinic.local','doctor123');
+INSERT IGNORE INTO patients(id,name,email,phone,password) VALUES (1,'Мария Соколова','patient@clinic.local','+77010000001','patient123'),(2,'Олег Смирнов','oleg@example.com','+77010000002','patient123'),(3,'Елена Волкова','elena@example.com','+77010000003','patient123'),(4,'Алексей Ким','alex@example.com','+77010000004','patient123'),(5,'Диана Орлова','diana@example.com','+77010000005','patient123');
+INSERT IGNORE INTO doctor_available_times(doctor_id,available_time) VALUES (1,'09:00'),(1,'10:00'),(1,'11:00'),(2,'14:00'),(2,'15:00');
