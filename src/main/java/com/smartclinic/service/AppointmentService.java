@@ -1,2 +1,12 @@
 package com.smartclinic.service; import com.smartclinic.model.*; import com.smartclinic.repository.*; import org.springframework.stereotype.Service; import java.time.*; import java.util.*;
-@Service public class AppointmentService { private final AppointmentRepository appointments; private final DoctorRepository doctors; private final PatientRepository patients; public AppointmentService(AppointmentRepository a,DoctorRepository d,PatientRepository p){appointments=a;doctors=d;patients=p;} public Appointment book(Long doctorId,Long patientId,LocalDateTime time){Appointment a=new Appointment(); a.setDoctor(doctors.findById(doctorId).orElseThrow()); a.setPatient(patients.findById(patientId).orElseThrow()); a.setAppointmentTime(time); return appointments.save(a);} public List<Appointment> forDoctorOn(Long id,LocalDate date){return appointments.findByDoctorIdAndAppointmentTimeBetween(id,date.atStartOfDay(),date.plusDays(1).atStartOfDay());} public List<Appointment> forPatient(Long id){return appointments.findByPatientId(id);} }
+@Service public class AppointmentService {
+ private final AppointmentRepository appointments; private final DoctorRepository doctors; private final PatientRepository patients;
+ public AppointmentService(AppointmentRepository a,DoctorRepository d,PatientRepository p){appointments=a;doctors=d;patients=p;}
+
+ // Создаём запись только после того, как нашли врача и пациента в базе.
+ public Appointment book(Long doctorId,Long patientId,LocalDateTime time){Appointment a=new Appointment(); a.setDoctor(doctors.findById(doctorId).orElseThrow()); a.setPatient(patients.findById(patientId).orElseThrow()); a.setAppointmentTime(time); return appointments.save(a);}
+
+ // Границы дня удобнее задавать как [начало дня; начало следующего дня).
+ public List<Appointment> forDoctorOn(Long id,LocalDate date){return appointments.findByDoctorIdAndAppointmentTimeBetween(id,date.atStartOfDay(),date.plusDays(1).atStartOfDay());}
+ public List<Appointment> forPatient(Long id){return appointments.findByPatientId(id);}
+}

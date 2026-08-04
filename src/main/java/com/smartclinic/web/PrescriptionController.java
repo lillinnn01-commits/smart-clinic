@@ -30,14 +30,19 @@ public class PrescriptionController {
     public ResponseEntity<?> create(@RequestHeader("Authorization") String authorization,
                                     @RequestBody Map<String, String> body) {
         try {
+            // Рецепт может создать только авторизованный пользователь портала врача.
             tokenService.validate(authorization);
+            if (body.get("medication") == null || body.get("medication").isBlank()) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Medication is required"));
+            }
             Prescription prescription = new Prescription();
             prescription.setDoctor(doctors.findById(Long.valueOf(body.get("doctorId"))).orElseThrow());
             prescription.setPatient(patients.findById(Long.valueOf(body.get("patientId"))).orElseThrow());
             prescription.setMedication(body.get("medication"));
-            return ResponseEntity.ok(prescriptions.save(prescription));
+            Prescription saved = prescriptions.save(prescription);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Prescription saved", "prescription", saved));
         } catch (Exception exception) {
-            return ResponseEntity.badRequest().body(Map.of("error", exception.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", exception.getMessage()));
         }
     }
 }
